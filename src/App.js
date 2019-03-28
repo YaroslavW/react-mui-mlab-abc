@@ -3,6 +3,7 @@ import { Appbar, Container } from 'muicss/react';
 import axios from 'axios';
 import Tasks from './Components/Tasks';
 import './App.css';
+import {apiKey} from './keys/apikeys';
 
 class App extends Component {
   constructor(){
@@ -21,7 +22,7 @@ class App extends Component {
       .request({
         method: "get",
         url:
-          "https://api.mlab.com/api/1/databases/react-tasks/collections/tasks?apiKey=yourAPIkey"
+          "https://api.mlab.com/api/1/databases/react-tasks/collections/tasks?apiKey="+apiKey
       })
       .then(response => {
         this.setState(
@@ -34,6 +35,28 @@ class App extends Component {
         );
       })
       .catch(error => {
+        console.log(error);
+      });
+  }
+  editState(task,checked){
+    axios
+      .request({
+        method: "put",
+        url:
+          "https://api.mlab.com/api/1/databases/react-tasks/collections/tasks/"+task._id.$oid+"?apiKey=" + apiKey,
+        data: {
+          text: task.text,
+          completed: checked
+        }
+      }).then((response) => {
+        let tasks = this.state.tasks;
+        for (let i = 0; i < tasks.length; i++) {
+          if (tasks[i]._id.$oid === response.data._id.$oid) {
+            tasks[i].completed = checked;
+          }
+        }
+        this.setState({ tasks: tasks });
+      }).catch(error => {
         console.log(error);
       });
   }
@@ -55,7 +78,10 @@ class App extends Component {
         </Appbar>
         <br />
         <Container>
-          <Tasks tasks={this.state.tasks}/>
+          <Tasks 
+            onEditState={this.editState.bind(this)} 
+            tasks={this.state.tasks}
+          />
         </Container>
       </div>
     );
