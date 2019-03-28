@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Appbar, Container } from 'muicss/react';
+import { Appbar, Container, Button } from 'muicss/react';
 import axios from 'axios';
 import Tasks from './Components/Tasks';
 import AddTask from './Components/AddTask';
@@ -44,7 +44,7 @@ class App extends Component {
       .request({
         method: "put",
         url:
-          "https://api.mlab.com/api/1/databases/react-tasks/collections/tasks/"+task._id.$oid+"?apiKey=" + apiKey,
+         "https://api.mlab.com/api/1/databases/react-tasks/collections/tasks/"+task._id.$oid+"?apiKey=" + apiKey,
         data: {
           text: task.text,
           completed: checked
@@ -84,6 +84,26 @@ class App extends Component {
         console.log(error);
       });
   }
+  clearTasks(){
+    let tasks = this.state.tasks;
+    let i = tasks.length;
+
+    while(i--){
+      if(tasks[i].completed === true) {
+        let id = tasks[i]._id.$oid;
+        tasks.splice(i, 1);
+        axios.request({
+          method:'delete',
+          url: "https://api.mlab.com/api/1/databases/react-tasks/collections/tasks/" + id + "?apiKey=" + apiKey,
+        }).then(response =>{
+
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
+    }
+    this.setState({tasks: tasks})
+  }
   render() {
     return (
       <div className="App">
@@ -107,6 +127,9 @@ class App extends Component {
             onEditState={this.editState.bind(this)} 
             tasks={this.state.tasks}
           />
+          <Button color="danger" onClick={this.clearTasks.bind(this)} >
+            Clear Tasks
+          </Button>
         </Container>
       </div>
     );
