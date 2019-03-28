@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Appbar, Container } from 'muicss/react';
 import axios from 'axios';
 import Tasks from './Components/Tasks';
+import AddTask from './Components/AddTask';
 import './App.css';
 import {apiKey} from './keys/apikeys';
 
@@ -60,6 +61,29 @@ class App extends Component {
         console.log(error);
       });
   }
+
+  addTask(text){
+    axios
+      .request({
+        method: "post",
+        url:
+          "https://api.mlab.com/api/1/databases/react-tasks/collections/tasks?apiKey=" + apiKey,
+        data: {
+          text: text,
+          completed: false
+        }
+      }).then((response) => {
+        let tasks = this.state.tasks;
+          tasks.push({
+            _id: response.data._id,
+            text: text,
+            completed: false
+          })
+        this.setState({ tasks: tasks });
+      }).catch(error => {
+        console.log(error);
+      });
+  }
   render() {
     return (
       <div className="App">
@@ -78,6 +102,7 @@ class App extends Component {
         </Appbar>
         <br />
         <Container>
+          <AddTask onAddTask={this.addTask.bind(this)} />
           <Tasks 
             onEditState={this.editState.bind(this)} 
             tasks={this.state.tasks}
