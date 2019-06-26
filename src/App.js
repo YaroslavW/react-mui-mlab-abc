@@ -29,9 +29,6 @@ class App extends Component {
         this.setState(
           {
             tasks: response.data
-          },
-          () => {
-            console.log(this.state);
           }
         );
       })

@@ -8,9 +8,11 @@ class AddTask extends Component {
             task: ''
         }
     }
+
     onSubmit(e){
         this.props.onAddTask(this.state.task);
-        e.preventDefault();
+        e.preventDefault(); 
+        document.getElementById("form").reset();  
     }
 
     onChange(e) {
@@ -18,8 +20,11 @@ class AddTask extends Component {
     }
     render() {
         return <div className="mui--divider-bottom">
-                    <Form onSubmit={this.onSubmit.bind(this)}>
-                        <Input hint="Add Task" onChange={this.onChange.bind(this)} />
+                    <Form id="form" onSubmit={this.onSubmit.bind(this)}>
+                        <Input 
+                            hint="Add Task" 
+                            onChange={this.onChange.bind(this)}
+                        />
                     </Form>
                 </div>;
     }
