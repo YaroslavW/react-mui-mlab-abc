@@ -1,9 +1,8 @@
+This project you can see [here](http://nondescript-bone.surge.sh/)
+
 For this application to work, you need to create your own database on the site https://mlab.com/home.
 Then create a folder name - keys and  the file apikeys.js and put your key there as:
  `export  const apiKey = 'YourAPIkey';`
-
-
-
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
